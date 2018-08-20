@@ -1,4 +1,4 @@
-# Logr
+# Logr [![Build Status](https://travis-ci.com/activeshadow/logr.svg?branch=master)](https://travis-ci.com/activeshadow/logr)
 
 Some different implementations of the
 [go-logr/logr](https://github.com/go-logr/logr) logging interface.
