@@ -8,6 +8,19 @@ import (
 	"github.com/go-logr/logr"
 )
 
+var (
+	verbosity int
+	loggers   []string
+)
+
+func SetVerbosity(v int) {
+	verbosity = v
+}
+
+func LimitToLoggers(names ...string) {
+	loggers = append(loggers, names...)
+}
+
 type clock struct {
 	mock time.Time // set in tests
 }
@@ -44,16 +57,16 @@ func (this StdInfoLogr) Enabled() bool {
 func (this StdInfoLogr) fmtMsg(msg string, kvs ...interface{}) string {
 	now := this.clock.now().UTC()
 
-	msg = utils.QuoteSpaces(msg)
-	msg = fmt.Sprintf("ts=%d name=%s msg=%s", now.Unix(), this.name, msg)
+	msg = util.QuoteSpaces(msg)
+	msg = fmt.Sprintf(`ts="%s" epoch=%d name=%s msg=%s`, now.Format("2006/01/02 15:04:05"), now.Unix(), this.name, msg)
 
 	for k, v := range this.kvs {
-		str := utils.QuoteSpaces(v)
+		str := util.QuoteSpaces(v)
 		msg = fmt.Sprintf("%s %s=%s", msg, k, str)
 	}
 
 	for i := 0; i < len(kvs); i += 2 {
-		str := utils.QuoteSpaces(kvs[i+1])
+		str := util.QuoteSpaces(kvs[i+1])
 		msg = fmt.Sprintf("%s %s=%s", msg, kvs[i], str)
 	}
 
@@ -62,7 +75,6 @@ func (this StdInfoLogr) fmtMsg(msg string, kvs ...interface{}) string {
 
 type StdLogr struct {
 	StdInfoLogr
-	verbosity int
 }
 
 func (this StdLogr) Error(err error, msg string, kvs ...interface{}) {
@@ -71,11 +83,13 @@ func (this StdLogr) Error(err error, msg string, kvs ...interface{}) {
 }
 
 func (this StdLogr) V(level int) logr.InfoLogger {
-	if level > this.verbosity {
-		return StdInfoLogr{enabled: false}
+	if level <= verbosity {
+		if len(loggers) == 0 || util.StringSliceContains(loggers, this.name) {
+			return this.WithValues("v", level)
+		}
 	}
 
-	return this.WithValues("v", level)
+	return &StdInfoLogr{enabled: false}
 }
 
 func (this StdLogr) WithValues(kvs ...interface{}) logr.Logger {
@@ -95,7 +109,6 @@ func (this StdLogr) WithValues(kvs ...interface{}) logr.Logger {
 			name:    this.name,
 			kvs:     newKVs,
 		},
-		verbosity: this.verbosity,
 	}
 }
 
@@ -108,17 +121,15 @@ func (this StdLogr) WithName(name string) logr.Logger {
 			name:    name,
 			kvs:     this.kvs,
 		},
-		verbosity: this.verbosity,
 	}
 }
 
-func New(name string, enabled bool, verbosity int) logr.Logger {
+func New(name string) logr.Logger {
 	return &StdLogr{
 		StdInfoLogr: StdInfoLogr{
-			enabled: enabled,
+			enabled: true,
 			name:    name,
 			kvs:     make(map[string]interface{}),
 		},
-		verbosity: verbosity,
 	}
 }
