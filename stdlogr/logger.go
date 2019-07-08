@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/activeshadow/logr/errors"
 	"github.com/activeshadow/logr/util"
 	"github.com/go-logr/logr"
 )
@@ -79,6 +80,12 @@ type StdLogr struct {
 
 func (this StdLogr) Error(err error, msg string, kvs ...interface{}) {
 	kvs = append(kvs, "error", err)
+
+	switch err := err.(type) {
+	case errors.LogrError:
+		kvs = append(kvs, err.KVs()...)
+	}
+
 	fmt.Println("level=error " + this.fmtMsg(msg, kvs...))
 }
 

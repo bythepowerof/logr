@@ -1,8 +1,9 @@
 package stdlogr
 
 import (
-	"errors"
 	"time"
+
+	"github.com/activeshadow/logr/errors"
 )
 
 func ExampleInfoLogger() {
@@ -76,4 +77,26 @@ func ExampleLimitedLogger() {
 	vLogger.(*StdInfoLogr).clock = &clock{mock: mock}
 	vLogger.Info("test verbose log", "hello", "crazy world")
 	// Output:
+}
+
+func ExampleLogrError() {
+	mock, _ := time.Parse("2006-01-02", "2015-12-15")
+
+	err := errors.New("foo bar").WithKVs("sucka", "fish")
+
+	logger := New("foo")
+	logger.(*StdLogr).clock = &clock{mock: mock}
+	logger.Error(err, "test log", "hello", "world")
+	// Output: level=error ts="2015/12/15 00:00:00" epoch=1450137600 name=foo msg="test log" hello=world error="foo bar" sucka=fish
+}
+
+func ExampleWrappedLogrError() {
+	mock, _ := time.Parse("2006-01-02", "2015-12-15")
+
+	err := errors.Wrap(errors.New("blech"), "foo bar").WithKVs("sucka", "fish")
+
+	logger := New("foo")
+	logger.(*StdLogr).clock = &clock{mock: mock}
+	logger.Error(err, "test log", "hello", "world")
+	// Output: level=error ts="2015/12/15 00:00:00" epoch=1450137600 name=foo msg="test log" hello=world error="foo bar: blech" sucka=fish
 }
