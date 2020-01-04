@@ -1,4 +1,4 @@
-# Logr [![Build Status](https://travis-ci.com/activeshadow/logr.svg?branch=master)](https://travis-ci.com/activeshadow/logr)
+# Logr [![Build Status](https://travis-ci.com/bythepowerof/logr.svg?branch=master)](https://travis-ci.com/bythepowerof/logr)
 
 Some different implementations of the
 [go-logr/logr](https://github.com/go-logr/logr) logging interface.
@@ -59,7 +59,7 @@ package main
 
 import (
   "errors"
-  "github.com/JeremyMarshall/logr/logrusr"
+  "github.com/bythepowerof/logr/logrusr"
   "github.com/sirupsen/logrus"
 )
 
