@@ -2,7 +2,7 @@ package logrusr
 
 import (
 	"fmt"
-	"github.com/activeshadow/logr/util"
+	"github.com/bythepowerof/logr/util"
 	"github.com/go-logr/logr"
 	"github.com/sirupsen/logrus"
 	"time"

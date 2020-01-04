@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/activeshadow/logr/util"
+	"github.com/bythepowerof/logr/util"
 	"github.com/go-logr/logr"
 )
 
