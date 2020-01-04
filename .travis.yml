@@ -1,17 +1,16 @@
-  language: go
-  go:
-    - "1.10"
-    - "1.11"
+language: go
+go:
+- "1.13"
 
-  cache:
-    directories:
-    - $HOME/.cache/go-build
-    - $HOME/gopath/pkg/mod
+cache:
+  directories:
+  - $HOME/.cache/go-build
+  - $HOME/gopath/pkg/mod
 
-  script:
-    - go mod download
-    - make manager
-    - ./go.test.sh
-    
-    after_success:
-    - bash <(curl -s https://codecov.io/bash)
+script:
+- go mod download
+- make build
+- ./go.test.sh
+  
+after_success:
+- bash <(curl -s https://codecov.io/bash)
