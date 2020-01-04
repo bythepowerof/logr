@@ -2,3 +2,16 @@
   go:
     - "1.10"
     - "1.11"
+
+  cache:
+    directories:
+    - $HOME/.cache/go-build
+    - $HOME/gopath/pkg/mod
+
+  script:
+    - go mod download
+    - make manager
+    - ./go.test.sh
+    
+    after_success:
+    - bash <(curl -s https://codecov.io/bash)
