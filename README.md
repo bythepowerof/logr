@@ -1,4 +1,5 @@
 # Logr [![Build Status](https://travis-ci.com/bythepowerof/logr.svg?branch=master)](https://travis-ci.com/bythepowerof/logr)
+[![codecov](https://codecov.io/gh/bythepowerof/logr/branch/master/graph/badge.svg)](https://codecov.io/gh/bythepowerof/logr) 
 
 Some different implementations of the
 [go-logr/logr](https://github.com/go-logr/logr) logging interface.
